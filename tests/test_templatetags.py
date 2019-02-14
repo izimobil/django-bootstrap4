@@ -609,6 +609,21 @@ class FieldTest(TestCase):
         attrs = form.fields["addon"].widget.attrs.copy()
         self.assertEqual(attrs, form.fields["addon"].widget.attrs)
 
+    def test_field_class(self):
+        # "normal" field, should be wrapped with a <div class="foo">
+        res = render_template_with_form(
+            "{% bootstrap_field form.subject field_class='foo' %}"
+        )
+        self.assertIn('<div class="foo">', res)
+
+        # checkbox field, should be wrapped with a
+        # <div class="form-check-inline"> instead of <div class="form-check">
+        res = render_template_with_form(
+            "{% bootstrap_field form.cc_myself field_class='form-check-inline' %}"
+        )
+        self.assertIn('<div class="form-check-inline">', res)
+        self.assertNotIn('<div class="form-check">', res)
+
 
 class ComponentsTest(TestCase):
     def test_alert(self):
